@@ -3,7 +3,9 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import NoSuchWindowException
 from bingy import start_bing_query
+#from bingy import list_of_words
 '''
     Selenium is necessary because of the javascript that is 
     loaded.
@@ -13,7 +15,15 @@ from bingy import start_bing_query
 link = "https://account.microsoft.com/rewards/pointsbreakdown"
 driver = webdriver.Edge()
 #sometimes will fail, maybe put a try statement to retry until fixed
-driver.get(link)
+while True:
+    try:
+        driver.get(link)
+        break
+    except NoSuchWindowException:
+        print("No Such Window Exception: trying again")
+    
+
+
 driver.implicitly_wait(10)
 userPointsBreakdown = WebDriverWait(driver,10).until(lambda x: x.find_element_by_id("userPointsBreakdown"))
 # print(userPointsBreakdown.text)
@@ -25,13 +35,14 @@ numbers = list(map(int, numbers))
 print(numbers)
 while numbers[0]/numbers[1] < 1:
     start_bing_query()
-    #driver.refresh()
-    time.sleep(8)
+    driver.refresh()
+    time.sleep(5)
     WebDriverWait(driver,10).until(lambda x: x.find_element_by_id("userPointsBreakdown"))
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     all = soup.find_all('p', class_="pointsDetail c-subheading-3 ng-binding")
     numbers = all[0].get_text().split(' / ')
     numbers = list(map(int, numbers))
+    print(numbers)
 
 time.sleep(10)
 driver.quit()

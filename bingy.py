@@ -9,7 +9,7 @@ from selenium.common.exceptions import NoSuchWindowException
 # for item in search_items:
 #     webbrowser.open("https://www.bing.com/search?q=" + item)
 
-def start_bing_query():
+def start_bing_query(driver):
     rando = random_word.RandomWords()
     # buggy right now
     item = ""
@@ -20,14 +20,17 @@ def start_bing_query():
         except:
             print("rando did not work...trying again")
 
-    driver = webdriver.Edge()
     while True:
         try:
+            driver.execute_script("window.open('');")
+            driver.switch_to.window(driver.window_handles[1])
             driver.get("https://www.bing.com/search?q=" + item)
+            
             break
         except NoSuchWindowException:
             print("No Such Window Exception: trying again")
-    driver.quit()
+    driver.close()
+    driver.switch_to.window(driver.window_handles[0])
     # webbrowser.open("https://www.bing.com/search?q=" + item)
 
     
@@ -44,5 +47,3 @@ def list_of_words(size=10):
         attempts += 1
     
     return rando.get_random_words()
-
-start_bing_query()

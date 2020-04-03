@@ -34,7 +34,7 @@ numbers = all[0].get_text().split(' / ')
 numbers = list(map(int, numbers))
 print(numbers)
 while numbers[0]/numbers[1] < 1:
-    start_bing_query()
+    start_bing_query(driver)
     driver.refresh()
     time.sleep(5)
     WebDriverWait(driver,10).until(lambda x: x.find_element_by_id("userPointsBreakdown"))

@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchWindowException
 from bingy import start_bing_query
+import rando_word_gen
 #from bingy import list_of_words
 '''
     Selenium is necessary because of the javascript that is 
@@ -33,8 +34,9 @@ all = soup.find_all('p', class_="pointsDetail c-subheading-3 ng-binding")
 numbers = all[0].get_text().split(' / ')
 numbers = list(map(int, numbers))
 print(numbers)
+r = rando_word_gen.Rando()
 while numbers[0]/numbers[1] < 1:
-    start_bing_query(driver)
+    start_bing_query(driver, r)
     driver.refresh()
     time.sleep(5)
     WebDriverWait(driver,10).until(lambda x: x.find_element_by_id("userPointsBreakdown"))
